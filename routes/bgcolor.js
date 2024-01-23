@@ -79,15 +79,15 @@ router.get('/', async (req, res) => {
  *               message: "데이터베이스 오류 발생"
  */
 router.post('/', async (req, res) => {
-  const { bgcolor_name, hexcode_id } = req.body; // 변수명 수정
+  const { bgcolor_name } = req.body; // 변수명 수정
 
-  if (!bgcolor_name || !hexcode_id) {
+  if (!bgcolor_name) {
     return res.status(400).json({ message: '잘못된 요청 - bgColorName과 hexCode가 필요합니다.' });
   }
 
   try {
     // 실제 로직 추가: 새로운 배경 색상 추가
-    const newBgColor = await addNewBgColor(bgcolor_name, hexcode_id); // 변수명 수정
+    const newBgColor = await addNewBgColor(bgcolor_name); // 변수명 수정
     res.status(201).json(newBgColor);
   } catch (error) {
     console.error(error);
@@ -138,11 +138,11 @@ router.post('/', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { bgcolor_name, hexcode_id } = req.body; // 변수명 수정
+  const { bgcolor_name} = req.body; // 변수명 수정
 
   try {
     // 실제 로직 추가: 배경 색상 수정
-    const updatedBgColor = await updateBgColor(id, bgcolor_name, hexcode_id); // 변수명 수정
+    const updatedBgColor = await updateBgColor(id, bgcolor_name ); // 변수명 수정
 
     if (!updatedBgColor) {
       return res.status(404).json({ message: '배경 색상을 찾을 수 없습니다.' });
@@ -217,8 +217,7 @@ router.delete('/:id', async (req, res) => {
  *           type: integer
  *         bgcolor_name:
  *           type: string
- *         hexcode_id:
- *           type: integer
+
  *     NewBgColor:
  *       type: object
  *       properties:

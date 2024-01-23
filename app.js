@@ -7,10 +7,10 @@ const { session, sessionStore } = require('./session');
 const { swaggerUi, specs } = require('./swagger.js');
 const { initializeDatabase } = require('./db');
 const artworkRouter = require('./routes/artwork');
-const bgcolorRouter = require('./routes/bgcolor'); 
-const caseRouter = require('./routes/case');
-const fontRouter = require('./routes/font'); 
-const fontcolorRouter = require('./routes/fontcolor'); 
+const bgcolorRouter = require('./routes/bgcolor');
+const orderRouter = require('./routes/order');
+const fontRouter = require('./routes/font');
+const fontcolorRouter = require('./routes/fontcolor');
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ initializeDatabase()
     // 라우트 등록
     app.use('/artwork', artworkRouter);
     app.use('/bgcolor', bgcolorRouter);
-    app.use('/case', caseRouter);
+    app.use('/order', orderRouter);
     app.use('/font', fontRouter);
     app.use('/fontcolor', fontcolorRouter);
 

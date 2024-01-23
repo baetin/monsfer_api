@@ -1,31 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { getAllCustomCases, addNewCustomCase, deleteCustomCase, deleteAllCustomCases } = require('../db'); // 경로는 실제 파일 위치에 맞게 수정
+const { getAllOrders, addNewOrder, deleteOrder, deleteAllOrders } = require('../db');
 
 /**
  * @swagger
  * tags:
- *   name: case
- *   description: 케이스 추가 조회 삭제
+ *   name: order
+ *   description: 주문 추가 조회 삭제
  */
 
 /**
  * @swagger
- * /case:
+ * /order:
  *   get:
- *     summary: 모든 custom_case 조회
- *     description: 모든 custom_case의 목록을 조회합니다.
+ *     summary: 모든 주문 조회
+ *     description: 모든 주문의 목록을 조회합니다.
  *     tags:
- *       - case
+ *       - order
  *     responses:
  *       '200':
- *         description: custom_case 목록
+ *         description: 주문 목록
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/CustomCase'
+ *                 $ref: '#/components/schemas/Order'
  *       '500':
  *         description: 데이터베이스 오류
  *         content:
@@ -35,8 +35,8 @@ const { getAllCustomCases, addNewCustomCase, deleteCustomCase, deleteAllCustomCa
  */
 router.get('/', async (req, res) => {
   try {
-    const customCases = await getAllCustomCases();
-    res.status(200).json(customCases);
+    const orders = await getAllOrders();
+    res.status(200).json(orders);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '데이터베이스 오류 발생' });
@@ -45,25 +45,25 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /case:
+ * /order:
  *   post:
- *     summary: 새로운 custom_case 추가
- *     description: 새로운 custom_case를 목록에 추가합니다.
+ *     summary: 새로운 주문 추가
+ *     description: 새로운 주문을 목록에 추가합니다.
  *     tags:
- *       - case
+ *       - order
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/NewCustomCase'
+ *             $ref: '#/components/schemas/NewOrder'
  *     responses:
  *       '201':
- *         description: 새로운 custom_case가 성공적으로 추가됨
+ *         description: 새로운 주문이 성공적으로 추가됨
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CustomCase'
+ *               $ref: '#/components/schemas/Order'
  *       '400':
  *         description: 잘못된 요청
  *         content:
@@ -78,15 +78,15 @@ router.get('/', async (req, res) => {
  *               message: "데이터베이스 오류 발생"
  */
 router.post('/', async (req, res) => {
-  const { artworkId, date, normalCaseId, fontId, hexcodeId } = req.body;
+  const { order_custom_case_id, order_product_folder_name, order_goods_name, order_date, order_check1, order_check2, order_download } = req.body;
 
-  if (!artworkId || !date || !normalCaseId || !fontId || !hexcodeId) {
+  if (!order_custom_case_id || !order_product_folder_name || !order_goods_name || !order_date || !order_check1 || !order_check2 || !order_download) {
     return res.status(400).json({ message: '잘못된 요청 - 필수 정보가 누락되었습니다.' });
   }
 
   try {
-    const newCustomCase = await addNewCustomCase(artworkId, date, normalCaseId, fontId, hexcodeId);
-    res.status(201).json(newCustomCase);
+    const newOrder = await addNewOrder(order_custom_case_id, order_product_folder_name, order_goods_name, order_date, order_check1, order_check2, order_download);
+    res.status(201).json(newOrder);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '데이터베이스 오류 발생' });
@@ -95,30 +95,30 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /case/{id}:
+ * /order/{id}:
  *   delete:
- *     summary: custom_case 삭제
- *     description: ID를 기반으로 custom_case를 삭제합니다.
+ *     summary: 주문 삭제
+ *     description: ID를 기반으로 주문을 삭제합니다.
  *     tags:
- *       - case
+ *       - order
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: 삭제할 custom_case의 ID
+ *         description: 삭제할 주문의 ID
  *     responses:
  *       '200':
- *         description: custom_case 삭제 성공
+ *         description: 주문 삭제 성공
  *         content:
  *           application/json:
  *             example:
- *               message: "custom_case가 성공적으로 삭제됨"
+ *               message: "주문이 성공적으로 삭제됨"
  *       '404':
- *         description: custom_case를 찾을 수 없음
+ *         description: 주문을 찾을 수 없음
  *         content:
  *           application/json:
  *             example:
- *               message: "custom_case를 찾을 수 없습니다."
+ *               message: "주문을 찾을 수 없습니다."
  *       '500':
  *         description: 데이터베이스 오류
  *         content:
@@ -130,13 +130,13 @@ router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const isDeleted = await deleteCustomCase(id);
+    const isDeleted = await deleteOrder(id);
 
     if (!isDeleted) {
-      return res.status(404).json({ message: 'custom_case를 찾을 수 없습니다.' });
+      return res.status(404).json({ message: '주문을 찾을 수 없습니다.' });
     }
 
-    res.status(200).json({ message: 'custom_case가 성공적으로 삭제됨' });
+    res.status(200).json({ message: '주문이 성공적으로 삭제됨' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '데이터베이스 오류 발생' });
@@ -145,19 +145,19 @@ router.delete('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /case/all:
+ * /order/all:
  *   delete:
- *     summary: 모든 custom_case 삭제
- *     description: 모든 custom_case를 삭제합니다.
+ *     summary: 모든 주문 삭제
+ *     description: 모든 주문을 삭제합니다.
  *     tags:
- *       - case
+ *       - order
  *     responses:
  *       '200':
- *         description: 모든 custom_case 삭제 성공
+ *         description: 모든 주문 삭제 성공
  *         content:
  *           application/json:
  *             example:
- *               message: "모든 custom_case가 성공적으로 삭제됨"
+ *               message: "모든 주문이 성공적으로 삭제됨"
  *       '500':
  *         description: 데이터베이스 오류
  *         content:
@@ -167,13 +167,13 @@ router.delete('/:id', async (req, res) => {
  */
 router.delete('/all', async (req, res) => {
   try {
-    const isDeleted = await deleteAllCustomCases();
+    const isDeleted = await deleteAllOrders();
 
     if (!isDeleted) {
-      return res.status(404).json({ message: '모든 custom_case를 찾을 수 없습니다.' });
+      return res.status(404).json({ message: '모든 주문을 찾을 수 없습니다.' });
     }
 
-    res.status(200).json({ message: '모든 custom_case가 성공적으로 삭제됨' });
+    res.status(200).json({ message: '모든 주문이 성공적으로 삭제됨' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '데이터베이스 오류 발생' });
@@ -184,33 +184,40 @@ router.delete('/all', async (req, res) => {
  * @swagger
  * components:
  *   schemas:
- *     CustomCase:
+ *     Order:
  *       type: object
  *       properties:
- *         custom_case_id:
+ *         order_custom_case_id:
  *           type: integer
- *         artwork_id:
- *           type: integer
- *         date:
+ *         order_product_folder_name:
  *           type: string
- *         normal_case_id:
- *           type: integer
- *         font_id:
- *           type: integer
- *         hexcode_id:
- *           type: integer
- *     NewCustomCase:
+ *         order_goods_name:
+ *           type: string
+ *         order_date:
+ *           type: string
+ *         order_check1:
+ *           type: string
+ *         order_check2:
+ *           type: string
+ *         order_download:
+ *           type: string
+ *     NewOrder:
  *       type: object
  *       properties:
- *         artworkId:
+ *         order_custom_case_id:
  *           type: integer
- *         date:
+ *         order_product_folder_name:
  *           type: string
- *         normalCaseId:
- *           type: integer
- *         fontId:
- *           type: integer
- *         hexcodeId:
- *           type: integer
+ *         order_goods_name:
+ *           type: string
+ *         order_date:
+ *           type: string
+ *         order_check1:
+ *           type: string
+ *         order_check2:
+ *           type: string
+ *         order_download:
+ *           type: string
  */
+
 module.exports = router;

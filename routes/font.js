@@ -78,14 +78,14 @@ router.get('/', async (req, res) => {
  *               message: "데이터베이스 오류 발생"
  */
 router.post('/', async (req, res) => {
-  const { fontName, hexcodeId, fontFilePath } = req.body;
+  const { fontName, fontFilePath } = req.body;
 
   if (!fontName || !hexcodeId || !fontFilePath) {
     return res.status(400).json({ message: '잘못된 요청 - fontName, hexcodeId, fontFilePath가 필요합니다.' });
   }
 
   try {
-    const newFont = await addNewFont(fontName, hexcodeId, fontFilePath);
+    const newFont = await addNewFont(fontName, fontFilePath);
     res.status(201).json(newFont);
   } catch (error) {
     console.error(error);
@@ -154,8 +154,6 @@ router.delete('/:id', async (req, res) => {
  *           type: integer
  *         font_name:
  *           type: string
- *         hexcode_id:
- *           type: integer
  *         font_file_path:
  *           type: string
  *     NewFont:
@@ -163,8 +161,6 @@ router.delete('/:id', async (req, res) => {
  *       properties:
  *         font_name:
  *           type: string
- *         hexcode_id:
- *           type: integer
  *         font_file_path:
  *           type: string
  */

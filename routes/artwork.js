@@ -79,14 +79,14 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/', async (req, res) => {
-  const { title, artist, image_path } = req.body;
+  const { image_path } = req.body;
 
   if (!title || !image_path) {
     return res.status(400).json({ message: '잘못된 요청 - title, image_path가 필요합니다.' });
   }
 
   const artworkRepository = getRepository(Artwork);
-  const newArtwork = artworkRepository.create({ title, artist, image_path });
+  const newArtwork = artworkRepository.create({ image_path });
   await artworkRepository.save(newArtwork);
 
   res.status(201).json(newArtwork);
@@ -148,19 +148,11 @@ router.delete('/:id', async (req, res) => {
  *       properties:
  *         id:
  *           type: integer
- *         title:
- *           type: string
- *         artist:
- *           type: string
  *         image_path:
  *           type: string
  *     NewArtwork:
  *       type: object
  *       properties:
- *         title:
- *           type: string
- *         artist:
- *           type: string
  *         image_path:
  *           type: string
  */

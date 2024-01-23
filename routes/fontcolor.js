@@ -80,15 +80,15 @@ router.get('/', async (req, res) => {
  *               message: "데이터베이스 오류 발생"
  */
 router.post('/', async (req, res) => {
-  const { name, hexCode } = req.body;
+  const { name } = req.body;
 
-  if (!name || !hexCode) {
-    return res.status(400).json({ message: '잘못된 요청 - name과 hexCode가 필요합니다.' });
+  if (!name) {
+    return res.status(400).json({ message: '잘못된 요청 - name이 필요합니다.' });
   }
 
   try {
     // 실제 로직 추가: 새로운 폰트 색상 추가
-    const newFontColor = await addNewFontColor(name, hexCode);
+    const newFontColor = await addNewFontColor(name);
     res.status(201).json(newFontColor);
   } catch (error) {
     console.error(error);
@@ -139,11 +139,11 @@ router.post('/', async (req, res) => {
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, hexCode } = req.body;
+  const { name } = req.body;
 
   try {
     // 실제 로직 추가: 폰트 색상 수정
-    const updatedFontColor = await updateFontColor(id, name, hexCode);
+    const updatedFontColor = await updateFontColor(id, name );
 
     if (!updatedFontColor) {
       return res.status(404).json({ message: '폰트 색상을 찾을 수 없습니다.' });
@@ -216,17 +216,17 @@ router.delete('/:id', async (req, res) => {
  *       properties:
  *         fontcolor_id:
  *           type: integer
- *         font_id:
- *           type: integer
- *         hexcode_id:
- *           type: integer
+ *         fontcolor_name:
+ *           type: string
+ 
  *     NewFontColor:
  *       type: object
  *       properties:
  *         font_id:
  *           type: integer
- *         hexcode_id:
- *           type: integer
+ *       fontcolor_name:
+ *           type: string
+
  */
 
 module.exports = router;
