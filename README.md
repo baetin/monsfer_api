@@ -8,3 +8,4 @@ npm install cors
 npm install @nestjs/swagger swagger-ui-express
 npm install typeorm-seeding
 
+.env파일 추가하기(노션에 있습니다)
