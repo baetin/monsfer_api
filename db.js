@@ -2,9 +2,9 @@ const { createConnection, EntitySchema, getRepository } = require('typeorm');
 
 // Artwork 엔터티 모델 정의
 class Artwork {
-  constructor(id, image_path) {
-    this.id = id;
-    this.image_path = image_path;
+  constructor(artwork_id, artwork_image_path) {
+    this.artwork_id = artwork_id;
+    this.artwork_image_path = artwork_image_path;
   }
 }
 
@@ -13,12 +13,12 @@ const ArtworkSchema = new EntitySchema({
   name: 'Artwork',
   target: Artwork,
   columns: {
-    id: {
+    artwork_id: {
       primary: true,
       type: 'int',
       generated: true,
     },
-    image_path: {
+    artwork_image_path: {
       type: 'varchar',
     },
   },
@@ -88,7 +88,7 @@ const OrderSchema = new EntitySchema({
     order_check2: {
       type: 'varchar',
     },
-    oreder_download: {
+    order_download: {
       type: 'varchar',
     },
   },
@@ -97,7 +97,7 @@ const OrderSchema = new EntitySchema({
 // FontColor 엔터티 모델 정의
 class FontColor {
   constructor(fontcolor_id, fontcolor_name) {
-    this.ontcolor_id = fontcolor_id;
+    this.fontcolor_id = fontcolor_id;
     this.fontcolor_name = fontcolor_name;
   }
 }
@@ -238,10 +238,10 @@ const getAllOrders = async () => {
 };
 
 // Order 추가 함수
-const addNewOrder = async (order_product_folder_name, order_goods_name, order_date, check1, check2, download) => {
+const addNewOrder = async (order_product_folder_name, order_goods_name, order_date, order_check1, order_check2, order_download) => {
   try {
     const orderRepository = getRepository(Order);
-    const newOrder = new Order(null, order_product_folder_name, order_goods_name, order_date, check1, check2, download);
+    const newOrder = new Order(null, order_product_folder_name, order_goods_name, order_date, order_check1, order_check2, order_download);
     return orderRepository.save(newOrder);
   } catch (error) {
     console.error('새로운 주문을 추가하는 중 오류 발생:', error.message);
@@ -382,7 +382,6 @@ module.exports = {
   Artwork,
   BgColor,
   Order,
-  OrderSchema,
   initializeDatabase,
   getAllBgColors,
   addNewBgColor,

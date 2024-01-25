@@ -79,14 +79,14 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/', async (req, res) => {
-  const { image_path } = req.body;
+  const { artwork_image_path } = req.body;
 
-  if (!title || !image_path) {
+  if (!artwork_image_path) {
     return res.status(400).json({ message: '잘못된 요청 - title, image_path가 필요합니다.' });
   }
 
   const artworkRepository = getRepository(Artwork);
-  const newArtwork = artworkRepository.create({ image_path });
+  const newArtwork = artworkRepository.create({ artwork_image_path });
   await artworkRepository.save(newArtwork);
 
   res.status(201).json(newArtwork);
@@ -102,7 +102,7 @@ router.post('/', async (req, res) => {
  *       - artwork
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: artwork_id
  *         required: true
  *         description: 삭제할 아트워크의 ID
  *     responses:
@@ -127,11 +127,11 @@ router.post('/', async (req, res) => {
  */
 
 router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
+  const { artwork_id } = req.params;
   const artworkRepository = getRepository(Artwork);
 
   try {
-    await artworkRepository.delete(id);
+    await artworkRepository.delete(artwork_id);
     res.status(200).json({ message: '아트워크가 성공적으로 삭제됨' });
   } catch (error) {
     console.error(error);
@@ -146,14 +146,14 @@ router.delete('/:id', async (req, res) => {
  *     Artwork:
  *       type: object
  *       properties:
- *         id:
+ *         artwork_id:
  *           type: integer
- *         image_path:
+ *         artwork_image_path:
  *           type: string
  *     NewArtwork:
  *       type: object
  *       properties:
- *         image_path:
+ *         artwork_image_path:
  *           type: string
  */
 module.exports = router;
