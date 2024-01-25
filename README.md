@@ -9,3 +9,5 @@ npm install @nestjs/swagger swagger-ui-express
 npm install typeorm-seeding
 
 .env파일 추가하기(노션에 있습니다)
+
+order 기능 빼고 수정완료 2024.01.23
